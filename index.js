@@ -59,7 +59,10 @@ app.get("/api/getFile", (req, res) => {
           json.yestXeroxCounter = json.todayXeroxCounter
           json.currentGT = 0
           json.currentDiff = 0
-          json.todayExpenses = []
+          json.todayXeroxCounter=0;
+          var temp=json.todayExpenses.slice(0,2)
+          temp.forEach(element => {element.amount=0})
+          json.todayExpenses = temp
           fs.writeFileSync(fullPath, JSON.stringify(json));
         } else {
           fs.writeFileSync(fullPath, defaultData);
