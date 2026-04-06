@@ -18,7 +18,22 @@ app.use(cors());
 
 process.env.TZ = 'Asia/Calcutta'
 
-
+app.get("/api/getYestFile", (req, res) => {
+	const { date } = req.query;
+	if (date) {
+		return res.status(200).json({
+			success: true,
+			yestFile: getYesterdayFileLoop(date),
+			message: "Success",
+		  });
+	}
+	
+	return res.status(400).json({
+        success: false,
+        yestFile: getYesterdayFileLoop(date),
+        message: "கணக்கு பார்க்கவில்லை",
+      });
+})
 
 //API Start
 app.get("/api/getFile", (req, res) => {
@@ -38,6 +53,7 @@ app.get("/api/getFile", (req, res) => {
     if (!fs.existsSync(fullPath) && getDateFromString(date).toDateString() != new Date().toDateString()) {
       return res.status(400).json({
         success: false,
+        yestFile: getYesterdayFileLoop(date),
         message: "கணக்கு பார்க்கவில்லை",
       });
     }
@@ -129,9 +145,11 @@ app.post("/api/saveFile", (req, res) => {
 
     try {
       console.log("File Written successfully.." + date);
+	  const jsonData = JSON.parse(readFileSyncAsString(fullPath));
       // Return a JSON response
       res.status(200).json({
         success: true,
+		data: jsonData,
         message: "Data Saved Successfully.",
       });
     } catch (parseError) {
