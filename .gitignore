@@ -132,3 +132,5 @@ dist
 files/*
 sslcert/*
 daemon/
+/OLD/
+package-lock.json
